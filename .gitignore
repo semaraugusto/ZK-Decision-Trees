@@ -3,3 +3,4 @@ challenge_*
 response_*
 pot*
 node_modules
+*.wtns

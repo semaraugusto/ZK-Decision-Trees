@@ -1,3 +1,4 @@
+set -e # Exit in case of any errors
 snarkjs powersoftau new bn128 18 pot18_0000.ptau -v
 snarkjs powersoftau contribute pot18_0000.ptau pot18_0001.ptau --name="First contribution" -v
 snarkjs powersoftau contribute pot18_0001.ptau pot18_0002.ptau --name="Second contribution" -v -e="some random text"

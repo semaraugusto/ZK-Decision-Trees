@@ -1,9 +1,13 @@
-circom circuit/decision_trees.circom --r1cs --wasm --sym
+circuit_path=$1
+circuit_name="$(basename $circuit_path .circom)"
+input_path=../$2
 
-pushd decision_trees_js
+circom $circuit_path --r1cs --wasm --sym
 
-node generate_witness.js decison_trees.wasm ../model_params/iris-tree-params.json witness.wtns
+cd $circuit_name\_js
 
-popd
+node generate_witness.js $circuit_name.wasm $input_path witness.wtns
 
-snarkjs plonk setup decision_trees.r1cs pot12_final.ptau circuit_final.zkey
+cd ../
+
+# snarkjs plonk setup $circuit_name.r1cs pot12_final.ptau circuit_final.zkey
