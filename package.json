@@ -1,0 +1,21 @@
+{
+  "name": "ZK-Decision-Trees",
+  "version": "0.0.0",
+  "description": "A circom implementation (plonk) of decision trees",
+  "main": "index.js",
+  "repository": "git@github.com:semaraugusto/ZK-Decision-Trees.git",
+  "author": "semaraugusto <semaraugusto@dcc.ufmg.br>",
+  "license": "MIT",
+
+  "scripts": {
+      "setup_cerimony": "sh setup_cerimony.sh",
+      "test_circom": "sh test_circom.sh",
+      "clean_all": "yarn clean_circuit; rm pot* response_* challenge_*",
+      "clean_circuit": "rm decision_trees.* circuit_final.zkey; rm -rf decision_trees_js"
+  },
+
+  "dependencies": {
+    "circomlib": "^0.5.1",
+    "snarkit2": "^0.2.0"
+  }
+}
