@@ -1,5 +1,6 @@
 type ChildNode<T> = Option<Box<Node<T>>>;
 
+#[derive(Debug)]
 pub struct Node<T> {
     left_child: ChildNode<T>,
     right_child: ChildNode<T>,
@@ -11,7 +12,10 @@ pub struct BinaryTree<T> {
     head: Option<Node<T>>,
 }
 
-impl<T> Node<T> {
+impl<T> Node<T>
+where
+    T: std::fmt::Debug,
+{
     fn new(data: T) -> Node<T> {
         Node {
             left_child: None,
@@ -27,6 +31,18 @@ impl<T> Node<T> {
         let child = Node::new(data);
         self.left_child = Some(Box::new(child));
     }
+
+    fn print_tree(&self) {
+        println!("Data: {:?}", self.data);
+        if let Some(child) = &self.left_child {
+            print!("Left: ");
+            child.print_tree();
+        }
+        if let Some(child) = &self.right_child {
+            print!("Right: ");
+            child.print_tree();
+        }
+    }
 }
 
 impl<T> BinaryTree<T> {
@@ -40,7 +56,8 @@ fn main() {
     root.add_left_child(20);
     root.add_right_child(30);
 
-    root.left_child.as_mut().unwrap().add_right_child(40);
-    root.left_child.as_mut().unwrap().add_left_child(50);
-    root.right_child.as_mut().unwrap().add_right_child(60);
+    root.left_child.as_mut().unwrap().add_left_child(40);
+    root.left_child.as_mut().unwrap().add_right_child(50);
+    root.right_child.as_mut().unwrap().add_right_child(70);
+    root.print_tree();
 }
