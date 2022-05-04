@@ -14,7 +14,7 @@ pub struct BinaryTree<T> {
 
 impl<T> Node<T>
 where
-    T: std::fmt::Debug,
+    T: std::fmt::Debug + Copy,
 {
     fn new(data: T) -> Node<T> {
         Node {
@@ -41,6 +41,30 @@ where
         if let Some(child) = &self.right_child {
             print!("Right: ");
             child.print_tree();
+        }
+    }
+
+    fn encode_tree(&self) {
+        let mut data_vec: Vec<T> = vec![self.data];
+        let mut is_node_vec: Vec<bool> = vec![true];
+        println!("Data: {:?}", self.data);
+        match &self.left_child {
+            Some(child) => {
+                print!("Left: ");
+                child.encode_tree();
+            }
+            None => {
+                is_node_vec.push(false);
+            }
+        }
+        match &self.right_child {
+            Some(child) => {
+                print!("Left: ");
+                child.encode_tree();
+            }
+            None => {
+                is_node_vec.push(false);
+            }
         }
     }
 }
