@@ -2,10 +2,10 @@ type ChildNode<T> = Option<Box<Node<T>>>;
 
 #[derive(Debug)]
 pub struct Node<T> {
-    left_child: ChildNode<T>,
-    right_child: ChildNode<T>,
     /// The actual data which will be stored within the tree
     pub data: T,
+    left_child: ChildNode<T>,
+    right_child: ChildNode<T>,
 }
 
 pub struct BinaryTree<T> {
@@ -43,15 +43,20 @@ where
             child.print_tree();
         }
     }
-
-    fn encode_tree(&self) {
+    fn encode_tree(&self) -> (Vec<T>, Vec<bool>) {
         let mut data_vec: Vec<T> = vec![self.data];
         let mut is_node_vec: Vec<bool> = vec![true];
-        println!("Data: {:?}", self.data);
+        self._encode_tree(&mut data_vec, &mut is_node_vec);
+
+        (data_vec, is_node_vec)
+    }
+
+    fn _encode_tree(&self, data_vec: &mut Vec<T>, is_node_vec: &mut Vec<bool>) {
         match &self.left_child {
             Some(child) => {
-                print!("Left: ");
-                child.encode_tree();
+                data_vec.push(child.data);
+                is_node_vec.push(true);
+                child._encode_tree(data_vec, is_node_vec);
             }
             None => {
                 is_node_vec.push(false);
@@ -59,8 +64,9 @@ where
         }
         match &self.right_child {
             Some(child) => {
-                print!("Left: ");
-                child.encode_tree();
+                data_vec.push(child.data);
+                is_node_vec.push(true);
+                child._encode_tree(data_vec, is_node_vec);
             }
             None => {
                 is_node_vec.push(false);
@@ -83,5 +89,8 @@ fn main() {
     root.left_child.as_mut().unwrap().add_left_child(40);
     root.left_child.as_mut().unwrap().add_right_child(50);
     root.right_child.as_mut().unwrap().add_right_child(70);
-    root.print_tree();
+    // root.print_tree();
+    let (data_vec, is_node_vec) = root.encode_tree();
+    println!("Data: {:?}", data_vec);
+    println!("node_vec: {:?}", is_node_vec);
 }
