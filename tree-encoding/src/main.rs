@@ -84,26 +84,28 @@ where
     }
 
     fn _encode_tree(&self, data_vec: &mut Vec<T>, is_node_vec: &mut Vec<bool>) {
-        match &self.left_child {
-            Some(child) => {
-                data_vec.push(child.data);
-                is_node_vec.push(true);
-                child._encode_tree(data_vec, is_node_vec);
-            }
-            None => {
-                is_node_vec.push(false);
-            }
-        }
-        match &self.right_child {
-            Some(child) => {
-                data_vec.push(child.data);
-                is_node_vec.push(true);
-                child._encode_tree(data_vec, is_node_vec);
-            }
-            None => {
-                is_node_vec.push(false);
+        for child in [&self.left_child, &self.right_child] {
+            match child {
+                Some(child) => {
+                    data_vec.push(child.data);
+                    is_node_vec.push(true);
+                    child._encode_tree(data_vec, is_node_vec);
+                }
+                None => {
+                    is_node_vec.push(false);
+                }
             }
         }
+        // match &self.right_child {
+        //     Some(child) => {
+        //         data_vec.push(child.data);
+        //         is_node_vec.push(true);
+        //         child._encode_tree(data_vec, is_node_vec);
+        //     }
+        //     None => {
+        //         is_node_vec.push(false);
+        //     }
+        // }
     }
     pub fn succinct_decoding(&mut self, encoded_tree: EncodedTree<T>) -> Node<T> {
         assert_ne!(encoded_tree.len(), 0);
