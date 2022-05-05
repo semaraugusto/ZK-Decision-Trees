@@ -39,6 +39,9 @@ impl<T> EncodedTree<T> {
             is_node_vec,
         }
     }
+    fn len(&self) -> usize {
+        self.data_vec.len()
+    }
 }
 
 impl<T> Node<T>
@@ -77,10 +80,7 @@ where
         let mut is_node_vec: Vec<bool> = vec![true];
         self._encode_tree(&mut data_vec, &mut is_node_vec);
 
-        EncodedTree {
-            data_vec,
-            is_node_vec,
-        }
+        EncodedTree::new(data_vec, is_node_vec)
     }
 
     fn _encode_tree(&self, data_vec: &mut Vec<T>, is_node_vec: &mut Vec<bool>) {
@@ -103,6 +103,32 @@ where
             None => {
                 is_node_vec.push(false);
             }
+        }
+    }
+    pub fn succinct_decoding(&mut self, encoded_tree: EncodedTree<T>) -> Node<T> {
+        assert_ne!(encoded_tree.len(), 0);
+        let mut is_node_iter = encoded_tree.is_node_vec.iter();
+        let mut data_iter = encoded_tree.data_vec.iter();
+        *self
+            ._recurse_decoding(&mut is_node_iter, &mut data_iter)
+            .unwrap()
+    }
+
+    fn _recurse_decoding<'a>(
+        &'a self,
+        is_node_iter: &mut impl Iterator<Item = &'a bool>,
+        data_iter: &mut impl Iterator<Item = &'a T>,
+    ) -> Option<Box<Node<T>>> {
+        let root = is_node_iter.next().unwrap();
+        match root {
+            true => {
+                let data = *data_iter.next().unwrap();
+                let mut node = Node::new(data);
+                node.left_child = self._recurse_decoding(is_node_iter, data_iter);
+                node.right_child = self._recurse_decoding(is_node_iter, data_iter);
+                Some(Box::new(node))
+            }
+            false => None,
         }
     }
 
@@ -138,3 +164,9 @@ fn main() {
     let res = root.save_tree("tree.json", true);
     println!("res: {:?}", res);
 }
+
+// #[cfg(test)]
+// mod tests {
+//     use super::*;
+//
+// }
